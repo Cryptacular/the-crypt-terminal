@@ -1,0 +1,17 @@
+body {
+  background: #1A1313;
+  color: #D1C7AE;
+  font-family: Inconsolata, sans-serif;
+  font-size: 18px;
+  height: 100vh;
+  line-height: 120%;
+}
+
+#root,
+.app {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  height: 100%;
+  justify-content: center;
+}
