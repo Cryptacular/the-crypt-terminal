@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AutosizeInput from 'react-input-autosize';
+import { CommandCenter } from './CommandCenter';
 import './Terminal.css';
 
 export class Terminal extends Component {
@@ -20,11 +20,13 @@ export class Terminal extends Component {
                     type: "info"
                 }
             ],
-            input: "help"
+            input: ""
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleBodyClick = this.handleBodyClick.bind(this);
+
+        document.addEventListener("keydown", this.handleEnter.bind(this));
     }
 
     render() {
@@ -41,7 +43,15 @@ export class Terminal extends Component {
                     ))}
                     <div>
                         <span className="terminal-currentLine">&gt;&nbsp;</span>
-                        <AutosizeInput value={this.state.input} onChange={this.handleInputChange} type="text" className="terminal-input" id="terminalInput" autoFocus ref={(input) => { this.textInput = input; }} />
+                        <span>{this.state.input}</span>
+                        <input
+                            value={this.state.input}
+                            onChange={this.handleInputChange}
+                            type="text" className="terminal-input"
+                            id="terminalInput"
+                            autoFocus
+                            ref={(input) => { this.textInput = input; }}
+                        />
                         <span className="terminal-cursor" />
                     </div>
                 </div>
@@ -60,5 +70,40 @@ export class Terminal extends Component {
 
     handleBodyClick() {
         this.textInput.focus();
+    }
+
+    handleEnter(e) {
+        if (e.code !== "Enter") {
+            return;
+        }
+
+        const { input } = this.state;
+        this.addOutput(input, "command");
+
+        const { success, response } = CommandCenter.handleCommand(input);
+        if (!success) {
+            this.addOutput(`Sorry, I don't recognise the command '${input}'. Enter \`help\` for assistance.`, "error");
+        }
+
+        if (response) {
+            response.forEach(r => {
+                this.addOutput(r, "info");
+            });
+        }
+
+        this.setState({
+            input: ""
+        });
+    }
+
+    addOutput(text, type) {
+        let output = [...this.state.output];
+        output.push({
+            text,
+            type
+        });
+        this.setState({
+            output
+        });
     }
 }
