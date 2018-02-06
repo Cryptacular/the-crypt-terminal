@@ -41,6 +41,11 @@
     overflow: auto;
 }
 
+.terminal-output {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
 .terminal-output--info {
     color: #867e74;
 }

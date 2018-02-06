@@ -16,7 +16,7 @@ export class Terminal extends Component {
                     type: "info"
                 },
                 {
-                    text: "For help with commands, e.g. contact, type `contact --help",
+                    text: "For help with commands, e.g. contact, type `help contact`",
                     type: "info"
                 }
             ],
@@ -37,7 +37,7 @@ export class Terminal extends Component {
                     <span className="terminalControls-control" />
                     <span className="terminalControls-control" />
                 </div>
-                <div className="terminal-body" onClick={this.handleBodyClick}>
+                <div className="terminal-body" onClick={this.handleBodyClick} id="terminalBody">
                     {this.state.output.map((o, i) => (
                         <div className={`terminal-output terminal-output--${o.type}`} key={`terminal-output--${i}`}>{o.text}</div>
                     ))}
@@ -82,10 +82,8 @@ export class Terminal extends Component {
 
         const { success, response } = CommandCenter.handleCommand(input);
         if (!success) {
-            this.addOutput(`Sorry, I don't recognise the command '${input}'. Enter \`help\` for assistance.`, "error");
-        }
-
-        if (response) {
+            this.addOutput(response, "error");
+        } else if (response) {
             response.forEach(r => {
                 this.addOutput(r, "info");
             });
@@ -94,6 +92,11 @@ export class Terminal extends Component {
         this.setState({
             input: ""
         });
+
+        const terminalBody = document.getElementById("terminalBody");
+        if (terminalBody) {
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
     }
 
     addOutput(text, type) {
