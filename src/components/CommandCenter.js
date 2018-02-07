@@ -1,5 +1,6 @@
 export const CommandCenter = {
     handleCommand: (input) => {
+        input = input.toLowerCase().trim();
         const inputs = input.split(" ");
         const command = inputs[0];
         const parameters = inputs.length > 1 ? inputs.slice(1, inputs.length) : null;
@@ -14,10 +15,39 @@ export const CommandCenter = {
             if (c.parameterRequired && !parameters) {
                 return { success: false, response: [`Parameter required. Run \`help ${command}\` for more information.`]};
             }
-            return c.execute && c.execute(parameters) || { success: false, response: ["Unknown error."] };
+            return (c.execute && c.execute(parameters)) || { success: false, response: ["Unknown error."] };
         }
 
         return { success: false, response: [`Sorry, I don't recognise the command '${command}'. Enter \`help\` for assistance.`] };
+    },
+    autoComplete: (text) => {
+        if (!text || text.length === 0) {
+            return "";
+        }
+
+        text = text.toLowerCase().trim();
+
+        let textCommands = text.split(" ");
+        let result = null;
+
+        if (textCommands.length > 1) {
+            const command = textCommands[0];
+            const parameter = textCommands[textCommands.length - 1];
+
+            if (command === "help") {
+                result = availableCommands.find((c) => (c.startsWith(parameter)));
+            } else if (commands[command]) {
+                const commandFound = commands[command].parameters && commands[command].parameters.find((c) => (c.name.startsWith(parameter)));
+                result = commandFound && commandFound.name;
+            }
+        } else {
+            result = availableCommands.find((c) => (c.startsWith(textCommands[textCommands.length - 1])));
+        }
+
+        if (result) {
+            textCommands[textCommands.length - 1] = result + " ";
+        }
+        return textCommands.join(" ");
     }
 }
 
@@ -75,8 +105,59 @@ const commands = {
         parameters: [
             {
                 name: "email",
-                description: "Returns Nick's email address."
+                description: "Returns Nick's email address.",
+                link: {
+                    url: "mailto:nick@thecrypt.co.nz",
+                    text: "nick@thecrypt.co.nz"
+                }
+            },
+            {
+                name: "twitter",
+                description: "Returns Nick's Twitter account.",
+                link: {
+                    url: "https://twitter.com/Cryptacular",
+                    text: "twitter.com@Cryptacular"
+                }
+            },
+            {
+                name: "medium",
+                description: "Returns Nick's Medium page.",
+                link: {
+                    url: "https://medium.com/@Cryptacular",
+                    text: "medium.com/@Cryptacular"
+                }
             }
-        ]
+        ],
+        execute: function(parameter) {
+            if (!parameter) {
+                return {success: true, response: [...this.description, ...this.parameters.map((v, i) => (
+                    `  ${v.name}: ${v.description}`
+                ))] };
+            }
+            
+            const type = parameter[0];
+            const response = this.parameters.find((x) => x.name === type);
+
+            if (response && response.link) {
+                const {text, url} = response.link;
+                return {
+                    success: true,
+                    response: [{text, url}]
+                };
+            } else {
+                return {
+                    success: false,
+                    response: [`Could not find ${type}.`]
+                };
+            }
+        }
+    }
+}
+
+const availableCommands = [];
+for (const c in commands) {
+    if (commands.hasOwnProperty(c)) {
+        const name = c.toString();
+        availableCommands.push(name);
     }
 }

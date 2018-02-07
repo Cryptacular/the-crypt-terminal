@@ -26,7 +26,7 @@ export class Terminal extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleBodyClick = this.handleBodyClick.bind(this);
 
-        document.addEventListener("keydown", this.handleEnter.bind(this));
+        document.addEventListener("keydown", this.handleKeyDown.bind(this));
     }
 
     render() {
@@ -72,11 +72,21 @@ export class Terminal extends Component {
         this.textInput.focus();
     }
 
-    handleEnter(e) {
-        if (e.code !== "Enter") {
-            return;
+    handleKeyDown(e) {
+        switch (e.code) {
+            case "Enter":
+                this.handleEnter();
+                break;
+            case "Tab":
+                e.preventDefault();
+                this.setState({ input: CommandCenter.autoComplete(this.state.input) });
+                break;
+            default:
+                break;
         }
+    }
 
+    handleEnter() {
         const { input } = this.state;
         this.addOutput(input, "command");
 
@@ -100,6 +110,7 @@ export class Terminal extends Component {
     }
 
     addOutput(text, type) {
+        text = this.parseLink(text);
         let output = [...this.state.output];
         output.push({
             text,
@@ -108,5 +119,17 @@ export class Terminal extends Component {
         this.setState({
             output
         });
+    }
+
+    parseLink(link) {
+        if (typeof(link) === "string") {
+            return link;
+        }
+
+        if (link.text && link.url) {
+            return <a href={link.url} target="_blank">{link.text}</a>
+        }
+
+        return link;
     }
 }
