@@ -5,7 +5,8 @@
 - [x] Different input field for mobile
 - [x] Add functionality to Suggestion boxes
 - [x] Tab autocompletion
-- [ ] Up/Down to retrieve previous commands
+- [x] Up/Down to retrieve previous commands
+- [ ] Text selection colour
 - [ ] Enable window controls
   - [ ] Close
     - [ ] Icon to open new window, as if desktop
