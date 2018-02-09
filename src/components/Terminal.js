@@ -21,7 +21,11 @@ export class Terminal extends Component {
                     type: "info"
                 }
             ],
-            input: ""
+            input: "",
+            history: {
+                position: -1,
+                list: []
+            }
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -84,8 +88,13 @@ export class Terminal extends Component {
                 this.handleEnter();
                 break;
             case "Tab":
-                e.preventDefault();
-                this.setState({ input: CommandCenter.autoComplete(this.state.input) });
+                this.handleTab(e);
+                break;
+            case "ArrowUp":
+                this.handleHistoryShift(1);
+                break;
+            case "ArrowDown":
+                this.handleHistoryShift(-1);
                 break;
             default:
                 break;
@@ -105,14 +114,46 @@ export class Terminal extends Component {
             });
         }
 
+        let history = {...this.state.history};
+        history.list.unshift(input);
+        history.position = -1;
+
         this.setState({
-            input: ""
+            input: "",
+            history
         });
 
         const terminalBody = document.getElementById("terminalBody");
         if (terminalBody) {
             terminalBody.scrollTop = terminalBody.scrollHeight;
         }
+    }
+
+    handleTab(e) {
+        e.preventDefault();
+        this.setState({ input: CommandCenter.autoComplete(this.state.input) });
+    }
+
+    handleHistoryShift(change) {
+        const { history } = this.state;
+        history.position += change;
+
+        if (history.position < -1) {
+            history.position = -1;
+        } else if (history.position >= history.list.length) {
+            history.position = history.list.length - 1;
+        }
+
+        if (history.list.length === 0 || history.position < 0) {
+            this.setState({
+                input: ""
+            });
+        }
+
+        const newInput = history.list[history.position];
+        newInput && this.setState({
+            input: newInput
+        });
     }
 
     handleSuggestionCommandClick(command) {
