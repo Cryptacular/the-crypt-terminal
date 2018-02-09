@@ -1,0 +1,17 @@
+.terminalSuggestions-suggestion {
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-right: 8px;
+    user-select: none;
+}
+
+.terminalSuggestions-suggestion--command {
+    background: #EBD3A4;
+    color: #613232;
+}
+
+.terminalSuggestions-suggestion--parameter {
+    background: #a4e6eb;
+    color: #1d489a;
+}

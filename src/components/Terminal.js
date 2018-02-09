@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { CommandCenter } from './CommandCenter';
+import { Suggestions } from './Suggestions';
 import './Terminal.css';
 
 export class Terminal extends Component {
@@ -25,6 +26,8 @@ export class Terminal extends Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleBodyClick = this.handleBodyClick.bind(this);
+        this.handleSuggestionCommandClick = this.handleSuggestionCommandClick.bind(this);
+        this.handleSuggestionParameterClick = this.handleSuggestionParameterClick.bind(this);
 
         document.addEventListener("keydown", this.handleKeyDown.bind(this));
     }
@@ -59,7 +62,7 @@ export class Terminal extends Component {
                     </div>
                 </div>
                 <div className="terminal-suggestions">
-                    <span className="terminalSuggestions-suggestion">help</span>
+                    <Suggestions currentInput={this.state.input} onCommandClick={this.handleSuggestionCommandClick} onParameterClick={this.handleSuggestionParameterClick} />
                 </div>
             </div>
         );
@@ -110,6 +113,23 @@ export class Terminal extends Component {
         if (terminalBody) {
             terminalBody.scrollTop = terminalBody.scrollHeight;
         }
+    }
+
+    handleSuggestionCommandClick(command) {
+        this.setState({
+            input: command + " "
+        });
+        this.textInput.focus();
+    }
+
+    handleSuggestionParameterClick(parameter) {
+        const currentInput = this.state.input.trim();
+
+        this.setState({
+            input: `${currentInput} ${parameter} `
+        });
+
+        this.textInput.focus();
     }
 
     addOutput(text, type) {

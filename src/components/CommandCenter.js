@@ -48,6 +48,30 @@ export const CommandCenter = {
             textCommands[textCommands.length - 1] = result + " ";
         }
         return textCommands.join(" ");
+    },
+    availableCommands: () => {
+        return [...availableCommands];
+    },
+    availableParameters: (cmd) => {
+        let commandToFind = cmd.trim();
+
+        if (!commandToFind || commandToFind.length === 0) {
+            return [];
+        }
+
+        const multipleCommands = commandToFind.split(" ");
+        if (multipleCommands.length > 1) {
+            commandToFind = multipleCommands[0];
+        }
+
+        if (commandToFind === "help") {
+            return [...availableCommands];
+        } else if (commandToFind && commands[commandToFind]) {
+            const parameters = commands[commandToFind].parameters;
+            return parameters.map((p) => p.name);
+        }
+        
+        return [];
     }
 }
 

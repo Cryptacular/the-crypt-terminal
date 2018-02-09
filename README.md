@@ -3,8 +3,9 @@
 ## To Do
 
 - [x] Different input field for mobile
-- [ ] Add functionality to Suggestion boxes
+- [x] Add functionality to Suggestion boxes
 - [x] Tab autocompletion
+- [ ] Up/Down to retrieve previous commands
 - [ ] Enable window controls
   - [ ] Close
     - [ ] Icon to open new window, as if desktop

@@ -67,6 +67,7 @@
 
 .terminal-formattedInput {
     display: none;
+    white-space: pre-wrap;
 }
 
 .terminal-input {
@@ -123,12 +124,4 @@
     display: flex;
     flex-direction: row;
     margin-top: 8px;
-}
-
-.terminalSuggestions-suggestion {
-    background: #EBD3A4;
-    border-radius: 8px;
-    color: #613232;
-    padding: 4px 8px;
-    margin-right: 8px;
 }
