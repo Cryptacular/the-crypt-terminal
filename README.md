@@ -13,8 +13,10 @@
 - [ ] Add colour themes
 - [ ] Add commands
   - [ ] about
-  - [x] contact
-  - [ ] social
+  - [ ] contact
+    - [x] email
+    - [ ] social
+    - [ ] github
   - [ ] blog
     * Retrieve list of blog posts from Medium
   - [ ] vi/vim
@@ -23,4 +25,6 @@
   - [ ] npm
   - [ ] rm -rf
   - [ ] cd
+  - [ ] clear / cls
+  - [ ] sudo
 - [ ] Panel for content, images etc
