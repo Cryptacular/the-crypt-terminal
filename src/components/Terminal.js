@@ -38,17 +38,20 @@ export class Terminal extends Component {
                     <span className="terminalControls-control" />
                 </div>
                 <div className="terminal-body" onClick={this.handleBodyClick} id="terminalBody">
-                    {this.state.output.map((o, i) => (
-                        <div className={`terminal-output terminal-output--${o.type}`} key={`terminal-output--${i}`}>{o.text}</div>
-                    ))}
-                    <div>
+                    <div className="terminal-outputs">
+                        {this.state.output.map((o, i) => (
+                            <div className={`terminal-output terminal-output--${o.type}`} key={`terminal-output--${i}`}>{o.text}</div>
+                        ))}
+                    </div>
+                    <div className="terminal-inputs">
                         <span className="terminal-currentLine">&gt;&nbsp;</span>
-                        <span>{this.state.input}</span>
+                        <span className="terminal-formattedInput">{this.state.input}</span>
                         <input
                             value={this.state.input}
                             onChange={this.handleInputChange}
                             type="text" className="terminal-input"
                             id="terminalInput"
+                            placeholder="Enter commands here"
                             autoFocus
                             ref={(input) => { this.textInput = input; }}
                         />

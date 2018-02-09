@@ -2,7 +2,7 @@
 
 ## To Do
 
-- [ ] Different input field for mobile
+- [x] Different input field for mobile
 - [ ] Add functionality to Suggestion boxes
 - [x] Tab autocompletion
 - [ ] Enable window controls
