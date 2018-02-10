@@ -1,6 +1,6 @@
 export const CommandCenter = {
     handleCommand: (input) => {
-        input = input.toLowerCase().trim();
+        input = (input && input.toLowerCase().trim()) || "";
         const inputs = input.split(" ");
         const command = inputs[0];
         const parameters = inputs.length > 1 ? inputs.slice(1, inputs.length) : null;
@@ -53,7 +53,7 @@ export const CommandCenter = {
         return [...availableCommands];
     },
     availableParameters: (cmd) => {
-        let commandToFind = cmd.trim();
+        let commandToFind = (cmd && cmd.trim()) || "";
 
         if (!commandToFind || commandToFind.length === 0) {
             return [];
