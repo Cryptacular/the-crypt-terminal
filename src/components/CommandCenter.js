@@ -1,3 +1,5 @@
+import { Commands, AvailableCommands } from './Commands';
+
 export const CommandCenter = {
     handleCommand: (input) => {
         input = (input && input.toLowerCase().trim()) || "";
@@ -9,7 +11,7 @@ export const CommandCenter = {
             return { success: false, response: [`Please enter a valid command.`] };
         }
 
-        const c = commands[command];
+        const c = Commands[command];
 
         if (c !== undefined) {
             if (c.parameterRequired && !parameters) {
@@ -34,14 +36,14 @@ export const CommandCenter = {
             const command = textCommands[0];
             const parameter = textCommands[textCommands.length - 1];
 
-            if (command === "help") {
-                result = availableCommands.find((c) => (c.startsWith(parameter)));
-            } else if (commands[command]) {
-                const commandFound = commands[command].parameters && commands[command].parameters.find((c) => (c.name.startsWith(parameter)));
+            if (command === "help" || command === "sudo") {
+                result = AvailableCommands.find((c) => (c.startsWith(parameter)));
+            } else if (Commands[command]) {
+                const commandFound = Commands[command].parameters && Commands[command].parameters.find((c) => (c.name.startsWith(parameter)));
                 result = commandFound && commandFound.name;
             }
         } else {
-            result = availableCommands.find((c) => (c.startsWith(textCommands[textCommands.length - 1])));
+            result = AvailableCommands.find((c) => (c.startsWith(textCommands[textCommands.length - 1])));
         }
 
         if (result) {
@@ -50,7 +52,7 @@ export const CommandCenter = {
         return textCommands.join(" ");
     },
     availableCommands: () => {
-        return [...availableCommands];
+        return [...AvailableCommands];
     },
     availableParameters: (cmd) => {
         let commandToFind = (cmd && cmd.trim()) || "";
@@ -64,124 +66,13 @@ export const CommandCenter = {
             commandToFind = multipleCommands[0];
         }
 
-        if (commandToFind === "help") {
-            return [...availableCommands];
-        } else if (commandToFind && commands[commandToFind]) {
-            const parameters = commands[commandToFind].parameters;
+        if (commandToFind === "help" || commandToFind === "sudo") {
+            return [...AvailableCommands];
+        } else if (commandToFind && Commands[commandToFind]) {
+            const parameters = Commands[commandToFind].parameters;
             return parameters.map((p) => p.name);
         }
         
         return [];
-    }
-}
-
-const commands = {
-    help: {
-        description: [
-            "You can run commands by typing the command name, followed by an optional parameter.",
-            "For example, you can run `help contact` to find out more about the `contact` command."
-        ],
-        parameterRequired: false,
-        parameters: [
-            {
-                name: "<command>",
-                description: "Provides information about the provided command."
-            }
-        ],
-        execute: function(command) {
-            if (!command) {
-                return {success: true, response: this.description };
-            }
-            
-            const c = commands[command[0]];
-
-            if (!c) {
-                return {
-                    success: false,
-                    response: [`Could not find command ${command[0]}.`]
-                };
-            }
-
-            const { description, parameterRequired, parameters } = c;
-            let response = [
-                `Command: ${command}`,
-                " ",
-                description
-            ];
-            if (parameters && parameters.length > 0) {
-                response = [
-                    ...response,
-                    " ",
-                    `Parameters${parameterRequired ? " - required" : ""}:`,
-                    ...parameters.map((p, i) => `  ${p.name}: ${p.description}`)
-                ];
-            }
-
-            return {
-                success: true,
-                response
-            };
-        }
-    },
-    contact: {
-        description: ["Request contact details."],
-        parameterRequired: false,
-        parameters: [
-            {
-                name: "email",
-                description: "Returns Nick's email address.",
-                link: {
-                    url: "mailto:nick@thecrypt.co.nz",
-                    text: "nick@thecrypt.co.nz"
-                }
-            },
-            {
-                name: "twitter",
-                description: "Returns Nick's Twitter account.",
-                link: {
-                    url: "https://twitter.com/Cryptacular",
-                    text: "twitter.com@Cryptacular"
-                }
-            },
-            {
-                name: "medium",
-                description: "Returns Nick's Medium page.",
-                link: {
-                    url: "https://medium.com/@Cryptacular",
-                    text: "medium.com/@Cryptacular"
-                }
-            }
-        ],
-        execute: function(parameter) {
-            if (!parameter) {
-                return {success: true, response: [...this.description, ...this.parameters.map((v, i) => (
-                    `  ${v.name}: ${v.description}`
-                ))] };
-            }
-            
-            const type = parameter[0];
-            const response = this.parameters.find((x) => x.name === type);
-
-            if (response && response.link) {
-                const {text, url} = response.link;
-                return {
-                    success: true,
-                    response: [{text, url}]
-                };
-            } else {
-                return {
-                    success: false,
-                    response: [`Could not find ${type}.`]
-                };
-            }
-        }
-    }
-}
-
-const availableCommands = [];
-for (const c in commands) {
-    if (commands.hasOwnProperty(c)) {
-        const name = c.toString();
-        availableCommands.push(name);
     }
 }

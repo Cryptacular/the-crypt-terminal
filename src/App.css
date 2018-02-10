@@ -19,3 +19,8 @@ body {
 a {
   color: #fb978d;
 }
+
+::selection {
+  color: #ebd3a4; 
+  background-color: #292727;
+}

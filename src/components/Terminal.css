@@ -138,9 +138,3 @@
         opacity: 0;
     }
 }
-
-.terminal-suggestions {
-    display: flex;
-    flex-direction: row;
-    margin-top: 8px;
-}

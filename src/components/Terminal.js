@@ -79,6 +79,13 @@ export class Terminal extends Component {
         );
     }
 
+    componentDidUpdate() {
+        const terminalBody = document.getElementById("terminalBody");
+        if (terminalBody) {
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+    }
+
     submit() {
         const { input } = this.state;
         let outputToAdd = [{text: input, type: "command"}];
@@ -96,11 +103,6 @@ export class Terminal extends Component {
             input: "",
             output,
             history
-        }, () => {
-            const terminalBody = document.getElementById("terminalBody");
-            if (terminalBody) {
-                terminalBody.scrollTop = terminalBody.scrollHeight;
-            }
         });
     }
 

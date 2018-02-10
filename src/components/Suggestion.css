@@ -1,8 +1,9 @@
 .terminalSuggestions-suggestion {
     border-radius: 8px;
     cursor: pointer;
+    display: inline-block;
     padding: 4px 8px;
-    margin-right: 8px;
+    margin: 8px 8px 0 0;
     user-select: none;
 }
 

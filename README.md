@@ -2,12 +2,13 @@
 
 ## To Do
 
+- [x] Favicon
 - [x] Different input field for mobile
 - [x] Fix submit functionality on mobile
 - [x] Add functionality to Suggestion boxes
 - [x] Tab autocompletion
 - [x] Up/Down to retrieve previous commands
-- [ ] Text selection colour
+- [x] Text selection colour
 - [ ] Enable window controls
   - [ ] Close
     - [ ] Icon to open new window, as if desktop
@@ -15,19 +16,19 @@
   - [ ] Full screen
 - [ ] Add colour themes
 - [ ] Add commands
-  - [ ] about
-  - [ ] contact
+  - [x] about
+  - [x] contact
     - [x] email
-    - [ ] social
-    - [ ] github
+    - [x] social
+    - [x] github
   - [ ] blog
     * Retrieve list of blog posts from Medium
-  - [ ] vi/vim
-  - [ ] git
+  - [x] vi/vim
+  - [x] git
   - [ ] ls
   - [ ] npm
-  - [ ] rm -rf
+  - [x] rm -rf
   - [ ] cd
   - [ ] clear / cls
-  - [ ] sudo
+  - [x] sudo
 - [ ] Panel for content, images etc
