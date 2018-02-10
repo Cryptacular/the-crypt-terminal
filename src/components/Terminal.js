@@ -28,10 +28,16 @@ export class Terminal extends Component {
             }
         };
 
+        this.submit = this.submit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleBodyClick = this.handleBodyClick.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
+        this.handleTab = this.handleTab.bind(this);
+        this.handleHistoryShift = this.handleHistoryShift.bind(this);
         this.handleSuggestionCommandClick = this.handleSuggestionCommandClick.bind(this);
         this.handleSuggestionParameterClick = this.handleSuggestionParameterClick.bind(this);
+        this.addOutput = this.addOutput.bind(this);
+        this.parseLink = this.parseLink.bind(this);
 
         document.addEventListener("keydown", this.handleKeyDown.bind(this));
     }
@@ -63,6 +69,7 @@ export class Terminal extends Component {
                             ref={(input) => { this.textInput = input; }}
                         />
                         <span className="terminal-cursor" />
+                        <span className="terminal-submit" onClick={this.submit}>Go</span>
                     </div>
                 </div>
                 <div className="terminal-suggestions">
@@ -70,6 +77,31 @@ export class Terminal extends Component {
                 </div>
             </div>
         );
+    }
+
+    submit() {
+        const { input } = this.state;
+        let outputToAdd = [{text: input, type: "command"}];
+
+        const { success, response } = CommandCenter.handleCommand(input);
+        outputToAdd = [...outputToAdd, ...response.map(r => ({text: this.parseLink(r), type: success ? "info" : "error"}))];
+        
+        const output = this.addOutput(outputToAdd);
+
+        let history = {...this.state.history};
+        history.list.unshift(input.trim());
+        history.position = -1;
+
+        this.setState({
+            input: "",
+            output,
+            history
+        }, () => {
+            const terminalBody = document.getElementById("terminalBody");
+            if (terminalBody) {
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+        });
     }
 
     handleInputChange(e) {
@@ -88,9 +120,11 @@ export class Terminal extends Component {
                 this.handleEnter();
                 break;
             case "Tab":
-                this.handleTab(e);
+                e.preventDefault();
+                this.handleTab();
                 break;
             case "ArrowUp":
+                e.preventDefault();
                 this.handleHistoryShift(1);
                 break;
             case "ArrowDown":
@@ -102,35 +136,10 @@ export class Terminal extends Component {
     }
 
     handleEnter() {
-        const { input } = this.state;
-        this.addOutput(input, "command");
-
-        const { success, response } = CommandCenter.handleCommand(input);
-        if (!success) {
-            this.addOutput(response, "error");
-        } else if (response) {
-            response.forEach(r => {
-                this.addOutput(r, "info");
-            });
-        }
-
-        let history = {...this.state.history};
-        history.list.unshift(input);
-        history.position = -1;
-
-        this.setState({
-            input: "",
-            history
-        });
-
-        const terminalBody = document.getElementById("terminalBody");
-        if (terminalBody) {
-            terminalBody.scrollTop = terminalBody.scrollHeight;
-        }
+        this.submit();
     }
 
-    handleTab(e) {
-        e.preventDefault();
+    handleTab() {
         this.setState({ input: CommandCenter.autoComplete(this.state.input) });
     }
 
@@ -173,16 +182,10 @@ export class Terminal extends Component {
         this.textInput.focus();
     }
 
-    addOutput(text, type) {
-        text = this.parseLink(text);
+    addOutput(arr) {
         let output = [...this.state.output];
-        output.push({
-            text,
-            type
-        });
-        this.setState({
-            output
-        });
+        output = [...output, ...arr]
+        return output;
     }
 
     parseLink(link) {

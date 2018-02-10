@@ -3,6 +3,7 @@
 ## To Do
 
 - [x] Different input field for mobile
+- [x] Fix submit functionality on mobile
 - [x] Add functionality to Suggestion boxes
 - [x] Tab autocompletion
 - [x] Up/Down to retrieve previous commands
