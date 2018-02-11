@@ -227,6 +227,17 @@ export const Commands = {
                 };
             }
         }
+    },
+    blog: {
+        description: ["See Nick's blog posts on Medium."],
+        parameterRequired: false,
+        parameters: [],
+        execute: () => {
+            return {
+                success: true,
+                response: getBlogPosts()
+            };
+        }
     }
 }
 
@@ -236,4 +247,14 @@ for (const c in Commands) {
         const name = c.toString();
         AvailableCommands.push(name);
     }
+}
+
+const getBlogPosts = () => {
+    return fetch('https://the-crypt-api-uyxyqpgepo.now.sh/posts', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    });
 }

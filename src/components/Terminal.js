@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CommandCenter } from './CommandCenter';
 import { Suggestions } from './Suggestions';
+import { Spinner } from './Spinner';
 import './Terminal.css';
 
 export class Terminal extends Component {
@@ -25,7 +26,8 @@ export class Terminal extends Component {
             history: {
                 position: -1,
                 list: []
-            }
+            },
+            loading: false
         };
 
         this.submit = this.submit.bind(this);
@@ -38,6 +40,7 @@ export class Terminal extends Component {
         this.handleSuggestionParameterClick = this.handleSuggestionParameterClick.bind(this);
         this.addOutput = this.addOutput.bind(this);
         this.parseLink = this.parseLink.bind(this);
+        this.printResponse = this.printResponse.bind(this);
 
         document.addEventListener("keydown", this.handleKeyDown.bind(this));
     }
@@ -58,6 +61,7 @@ export class Terminal extends Component {
                     </div>
                     <div className="terminal-inputs">
                         <span className="terminal-currentLine">&gt;&nbsp;</span>
+                        <Spinner isLoading={this.state.loading} />
                         <span className="terminal-formattedInput">{this.state.input}</span>
                         <input
                             value={this.state.input}
@@ -88,20 +92,40 @@ export class Terminal extends Component {
 
     submit() {
         const { input } = this.state;
-        let outputToAdd = [{text: input, type: "command"}];
 
         const { success, response } = CommandCenter.handleCommand(input);
-        outputToAdd = [...outputToAdd, ...response.map(r => ({text: this.parseLink(r), type: success ? "info" : "error"}))];
+        
+        if (response.toString() === "[object Promise]") {
+            const term = this;
+            this.setState({
+                input: "",
+                loading: true
+            });
+            response.then(function(res) {
+                return res.json();
+            })
+            .then(function(posts) {
+                const postsToAdd = posts[0].item.map(p => (p.category ? {text: p.title[0], url: p.link[0]} : ""));
+                term.printResponse(input, success, postsToAdd);
+            });
+        } else {
+            this.printResponse(input, success, response);
+        }
+    }
+
+    printResponse(currentCommand, success, response) {
+        let outputToAdd = [{text: currentCommand, type: "command"}, ...response.map(r => ({text: this.parseLink(r), type: success ? "info" : "error"}))];
         
         const output = this.addOutput(outputToAdd);
 
         let history = {...this.state.history};
-        history.list.unshift(input.trim());
+        history.list.unshift(currentCommand.trim());
         history.position = -1;
 
         this.setState({
             input: "",
             output,
+            loading: false,
             history
         });
     }

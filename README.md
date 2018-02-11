@@ -2,6 +2,7 @@
 
 ## To Do
 
+- [ ] Google Analytics for commands
 - [x] Favicon
 - [x] Different input field for mobile
 - [x] Fix submit functionality on mobile
@@ -21,7 +22,7 @@
     - [x] email
     - [x] social
     - [x] github
-  - [ ] blog
+  - [x] blog
     * Retrieve list of blog posts from Medium
   - [x] vi/vim
   - [x] git
