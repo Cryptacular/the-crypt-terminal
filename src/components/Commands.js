@@ -65,7 +65,7 @@ export const Commands = {
                 description: "Returns Nick's Twitter account.",
                 link: {
                     url: "https://twitter.com/Cryptacular",
-                    text: "twitter.com@Cryptacular"
+                    text: "twitter.com/@Cryptacular"
                 }
             },
             {

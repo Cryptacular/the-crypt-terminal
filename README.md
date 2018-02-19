@@ -2,7 +2,8 @@
 
 ## To Do
 
-- [ ] Google Analytics for commands
+- [ ] Add 404 page
+- [x] Google Analytics for commands
 - [x] Favicon
 - [x] Different input field for mobile
 - [x] Fix submit functionality on mobile

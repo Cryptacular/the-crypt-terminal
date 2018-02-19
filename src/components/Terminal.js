@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import { CommandCenter } from './CommandCenter';
 import { Suggestions } from './Suggestions';
 import { Spinner } from './Spinner';
@@ -92,6 +93,11 @@ export class Terminal extends Component {
 
     submit() {
         const { input } = this.state;
+
+        ReactGA.event({
+            category: 'Command',
+            action: input,
+        });
 
         const { success, response } = CommandCenter.handleCommand(input);
         
