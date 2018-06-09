@@ -1,4 +1,5 @@
 import { CommandCenter } from "./CommandCenter";
+import { getBlogPosts } from './Api';
 
 export const Commands = {
     help: {
@@ -247,14 +248,4 @@ for (const c in Commands) {
         const name = c.toString();
         AvailableCommands.push(name);
     }
-}
-
-const getBlogPosts = () => {
-    return fetch('https://the-crypt-api-uyxyqpgepo.now.sh/posts', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    });
 }
